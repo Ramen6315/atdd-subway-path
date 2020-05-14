@@ -9,20 +9,49 @@ function Search() {
   const $searchResultContainer = document.querySelector('#search-result-container')
   const $favoriteButton = document.querySelector('#favorite-button')
 
-  const showSearchResult = (searchInput) => {
+  const showSearchResultByDistance = (searchInput) => {
     api.path.findByDistance(searchInput).then(pathResponse =>
         $searchResultContainer.innerHTML = searchResultTemplate(pathResponse)
-    ).catch(error => alert("하하하"))
+    ).catch(error => alert("검색 중 오류가 발생했습니다."))
+
+  }
+
+  const showSearchResultByDuration = (searchInput) => {
+    api.path.findByDistance(searchInput).then(pathResponse =>
+        $searchResultContainer.innerHTML = searchResultTemplate(pathResponse)
+    ).catch(error => alert("검색 중 오류가 발생했습니다."))
 
   }
 
   const onSearch = event => {
     event.preventDefault()
+    console.log("hahahaha")
+    const isSearchMinimumTimeButton = event.target.classList.contains("search-minimum-time");
+    if (isSearchMinimumTimeButton) {
+      return;
+    }
+
+
+    console.log($departureStationName.value)
+    const searchInput = {
+      source: $departureStationName.value,
+      target: $arrivalStationName.value,
+    }
+    showSearchResultByDistance(searchInput)
+  }
+
+  const onSearchMininumTimeButtonClicked = event => {
+    const isSearchMinimumTimeButton = event.target.classList.contains("search-minimum-time");
+    if (!isSearchMinimumTimeButton) {
+      return;
+    }
+    console.log("성공!!")
+
     const searchInput = {
       source: $departureStationName.value,
       target: $arrivalStationName.value
     }
-    showSearchResult(searchInput)
+    showSearchResultByDuration(searchInput)
   }
 
   const onToggleFavorite = event => {
@@ -45,7 +74,8 @@ function Search() {
 
   const initEventListener = () => {
     // $favoriteButton.addEventListener(EVENT_TYPE.CLICK, onToggleFavorite)
-    $searchButton.addEventListener(EVENT_TYPE.CLICK, onSearch)
+    $searchButton.addEventListener(EVENT_TYPE.CLICK, onSearch);
+    $searchResultContainer.addEventListener(EVENT_TYPE.CLICK, onSearchMininumTimeButtonClicked);
   }
 
   this.init = () => {

@@ -33,6 +33,11 @@ const api = (() => {
 
   const path = {
     findByDistance(params) {
+      console.log("허러러러러")
+      console.log(params.source)
+      return request(`/stations/shortest-path?source=${params.source}&target=${params.target}`)
+    },
+    findByDuration(params) {
       return request(`/stations/shortest-path?source=${params.source}&target=${params.target}`)
     }
   }
